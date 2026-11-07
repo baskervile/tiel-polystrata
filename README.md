@@ -2,7 +2,9 @@
 
 A Windows x64 launcher for **Tiel Coder 35B-A3B MTP UD-Q4_K_XL** on NVIDIA CUDA. It uses the tested PolyStrata engine, a 128K context, and a text-only web UI and OpenAI-compatible API. Use the API from Oh My Pi on the same PC or another device.
 
-## Start
+For Linux, see the [native setup and engine comparison guide](LINUX.md).
+
+## Start on Windows
 
 Install [Git for Windows](https://git-scm.com/download/win) and a [current NVIDIA driver](https://www.nvidia.com/en-us/drivers/). The tested system used an RTX 5060 with 8 GB VRAM and 32 GB system RAM. Allow about 27 GB of free disk space for a new installation, including the 22.75 GB model. The model cache and repo can be on different drives.
 

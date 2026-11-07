@@ -84,3 +84,9 @@ Use the [upgrade agent prompt](UPGRADE-AGENT-PROMPT.md) for the historical Tiel 
 Promote the candidate when it meets the agreed quality, speed, and headroom targets. Stop the test instance. To keep existing clients connected, copy the old key file directly into the candidate's private `.tiel/api-key.txt` and start with the original model ID, bind mode, and port. If using Tailscale, use the original HTTPS port and backend port so the launcher can reuse the existing Serve mapping. Recheck authenticated model listing, streaming generation, OMP tool use and Monitor through the actual client URL.
 
 If anything regresses, stop the candidate and start the original clone with its recorded command and environment. Restore only a Serve mapping you changed, then check the original API and client again. Keep both pinned configurations and the comparison results until the new version has proved stable in normal use.
+
+## Linux upgrades
+
+Use the [Linux guide](LINUX.md) in a second upstream PolyStrata checkout at the candidate's source commit. Keep the old checkout, generated `strata-*.json`, `run-*.sh`, `.venv`, engine files, and model data directory in place. Give the candidate a separate `--data-dir` so it has its own tokenizer and expert profile, while passing the same cached GGUF through `--gguf-dir` and selecting the explicit `tiel` family. Record `uname -r`, the GPU driver and CUDA or ROCm version, and any environment or library-path overrides along with the benchmark baseline.
+
+Keep the candidate on a spare loopback port and run the same acceptance tests before moving it to the original port. If you change engines, compare flags and capabilities using that engine's help. Roll back by stopping the candidate and starting the original `run-*.sh` with its recorded environment and authentication.
