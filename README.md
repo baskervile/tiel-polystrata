@@ -104,6 +104,8 @@ Invoke-RestMethod -Uri 'http://127.0.0.1:8092/v1/models' -Headers @{ Authorizati
 
 ## Versions
 
+This starter fetches the tested upstream PolyStrata code and engine at fixed versions. To evaluate a newer release and tune it for your machine, give a coding agent the [upgrade and tuning prompt](UPGRADE-AGENT-PROMPT.md).
+
 PolyStrata engine `v0.1.45-poly.7` with server commit `fabae0d6445e524a1dc68b2c2fa99b53880f98e6`, CUDA runtime and libraries from llama.cpp `b12128`, and Tiel GGUF revision `bb5f3f441849fc24c2d9037c310bc995404bfa0c`. Downloads come from the upstream projects. The repository contains the launcher and templates. Runtime files, logs and API keys live in the ignored `.tiel` directory.
 
 [PolyStrata](https://github.com/simplexai-labs/PolyStrata) · [llama.cpp](https://github.com/ggml-org/llama.cpp) · [Tiel Coder GGUF](https://huggingface.co/peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP) · [Tailscale Serve](https://tailscale.com/docs/reference/tailscale-cli/serve)
