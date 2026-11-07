@@ -19,6 +19,8 @@ import psutil
 import requests
 from huggingface_hub import hf_hub_download
 
+from monitor import install_monitor
+
 ROOT = Path(__file__).resolve().parent
 SOURCE = 'https://github.com/simplexai-labs/PolyStrata.git'
 REVISION = 'fabae0d6445e524a1dc68b2c2fa99b53880f98e6'
@@ -93,6 +95,7 @@ def install_asset(state, name, url, digest, expected_file):
 
 def prepare(state, model_path):
     install_source(state)
+    install_monitor(state / 'polystrata')
     for asset in ASSETS:
         install_asset(state, *asset)
     if model_path:

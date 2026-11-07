@@ -102,9 +102,24 @@ $key = (Get-Content .\.tiel\api-key.txt -Raw).Trim()
 Invoke-RestMethod -Uri 'http://127.0.0.1:8092/v1/models' -Headers @{ Authorization = "Bearer $key" }
 ```
 
+## Hardware sensors
+
+Open **Monitor → Hardware sensors**. In **About → Settings → Hardware sensors**, choose CPU, GPU, storage, fans and system readings. Set optional warning temperatures in °C for CPU, GPU and storage. These choices are per browser. Warnings are visual indicators on the Monitor page.
+
+NVIDIA temperature, requested fan speed (%), power, SM clock, and free VRAM come directly from the driver. For CPU and drive temperatures, actual fan RPM, and other readings that your hardware exposes:
+
+1. Download and extract `LibreHardwareMonitor.zip` from the [official Windows releases](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases). Use the regular ZIP with Windows PowerShell 5.1.
+2. Start the read-only bridge on the Windows host. Keep it open alongside PolyStrata. If temperatures or chassis fan RPM are unavailable, try the bridge in an administrator PowerShell. Hardware and firmware still determine which readings it can supply.
+
+   ```powershell
+   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Start-Sensors.ps1 -LibraryPath 'C:\Tools\LibreHardwareMonitor\LibreHardwareMonitorLib.dll'
+   ```
+
+The bridge writes a local snapshot every five seconds. PolyStrata reads it from `%LOCALAPPDATA%\TielHardwareMonitor\sensors.json` and serves the readings through its existing authenticated Monitor endpoint. Run one bridge per snapshot file. If the bridge runs under a different Windows account, use `-OutputPath` and set `TIEL_SENSOR_FILE` for the server to the same readable file. Stale snapshots are discarded. Libre Hardware Monitor's own web server can stay off.
+
 ## Versions
 
-This starter fetches the tested upstream PolyStrata code and engine at fixed versions. To evaluate a newer release and tune it for your machine, give a coding agent the [upgrade and tuning prompt](UPGRADE-AGENT-PROMPT.md).
+This starter fetches the tested upstream PolyStrata code and engine at fixed versions, then applies a small web and telemetry overlay. To evaluate a newer release and tune it for your machine, give a coding agent the [upgrade and tuning prompt](UPGRADE-AGENT-PROMPT.md).
 
 PolyStrata engine `v0.1.45-poly.7` with server commit `fabae0d6445e524a1dc68b2c2fa99b53880f98e6`, CUDA runtime and libraries from llama.cpp `b12128`, and Tiel GGUF revision `bb5f3f441849fc24c2d9037c310bc995404bfa0c`. Downloads come from the upstream projects. The repository contains the launcher and templates. Runtime files, logs and API keys live in the ignored `.tiel` directory.
 
