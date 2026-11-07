@@ -1,6 +1,6 @@
 # Run Tiel Coder on Linux
 
-Start with **upstream PolyStrata** for an 8 GB NVIDIA GPU and 32 GB RAM. It lists the exact Tiel Coder `qwen35moe` GGUF and its embedded MTP head. Use **upstream llama.cpp** as the comparison baseline and **ik_llama.cpp** as the first performance fork to test. The measurements in this repository came from Windows. The Linux commands below were checked against the relevant upstream sources and CLI, and still need an end-to-end run on Linux hardware. [PolyStrata model and backend support](https://github.com/simplexai-labs/PolyStrata/blob/main/docs/BACKENDS.md) · [Tiel model card](https://huggingface.co/peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP)
+Start with **upstream PolyStrata** for an 8 GB NVIDIA GPU and 32 GB RAM. It lists the exact Tiel Coder `qwen35moe` GGUF and its embedded MTP head. Use **upstream llama.cpp** as the comparison baseline and **ik_llama.cpp** as the first performance fork to test on NVIDIA. For AMD RDNA 2, see the [RX 6600M route](#amd-radeon-rx-6600m-rdna-2). The measurements in this repository came from Windows. The Linux commands below were checked against the relevant upstream sources and CLI, and still need an end-to-end run on Linux hardware. [PolyStrata model and backend support](https://github.com/simplexai-labs/PolyStrata/blob/main/docs/BACKENDS.md) · [Tiel model card](https://huggingface.co/peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP)
 
 ## 1. Download or reuse the exact GGUF
 
@@ -52,6 +52,36 @@ The explicit `tiel` family matters. Generic `--custom-gguf` detection on this pi
 Once 32K works, rerun setup with `--context 131072` or configure the corresponding `--max-context` in the generated engine args. Compare the actual flags against the Windows profile before attributing any difference to Linux. For example, the Windows profile used Q8_0 KV and 12 threads. If you need those exact values, check the native engine's `--help` and set `--kv q8_0` and `--threads 12` in its generated `args` list. The setup-level `--kv` option has a different scope. Record the effective reserve and measure actual free VRAM. For AMD, check PolyStrata's documented GPU support and follow the HIP path only on a supported card. An AMD iGPU and NVIDIA dGPU on the same system do not establish mixed-device support for this model. [Upstream setup](https://github.com/simplexai-labs/PolyStrata/blob/main/docs/AI_SETUP.md) · [AMD HIP notes](https://github.com/simplexai-labs/PolyStrata/blob/main/docs/AMD_HIP.md)
 
 ## 3. Compare with llama.cpp and Linux forks
+
+### AMD Radeon RX 6600M (RDNA 2)
+
+The RX 6600M has 8 GB of VRAM and is expected to report `gfx1032`. On a laptop with integrated graphics, verify that the runtime selected the discrete Radeon. Start with **PolyStrata HIP**. PolyStrata documents a Fedora run on the related desktop RX 6600 XT, using a native `gfx1032` build and Qwen3.6 UD-Q4_K_M. The owner measured 69 tok/s on one generation. That result used a different GPU and model, and Tiel on the RX 6600M still needs a test. [AMD mobile GPU specifications](https://www.amd.com/en/newsroom/press-releases/2021-5-31-amd-unveils-rdna-2-based-mobile-graphics-new-amd-.html) · [PolyStrata HIP notes](https://github.com/simplexai-labs/PolyStrata/blob/main/docs/AMD_HIP.md) · [RX 6600 XT community run](https://github.com/VecSzn/PolyStrata/discussions/49)
+
+In the upstream checkout from step 2, use the same `model` and `key`. If a system ROCm is installed, check `rocminfo` for the discrete GPU and its native target. PolyStrata can build a HIP engine with its documented `gfx103X-all` wheel path where supported. Confirm setup's chosen GPU and backend before loading. If setup lists both GPUs, add `--gpu N` with the discrete GPU's index from setup. Clear any inherited architecture override before setup and launch.
+
+```bash
+unset HSA_OVERRIDE_GFX_VERSION
+./setup.sh --check --backend hip
+./setup.sh --yes --setup --no-start --no-browser \
+  --family tiel --model UD-Q4_K_XL --gguf-dir "$(dirname "$model")" \
+  --backend hip --vision none --context 8192 \
+  --parallel 1 --vram-reserve-mib 1280 --host 127.0.0.1 --port 8092
+STRATA_API_KEY="$(cat "$key")" ./run-tiel-ud-q4_k_xl.sh
+```
+
+Run the authenticated API checks below and a short coding/tool task. Then raise context to 32K and only try 128K once headroom and stability are measured. The upstream HIP path can allocate KV at startup, so context changes can affect load-time VRAM more than on the CUDA setup. If HIP cannot find a working native runtime, use **llama.cpp Vulkan** as the fallback or comparison. Verify the Vulkan driver with `vulkaninfo --summary`, use the same llama.cpp checkout as the CUDA example below, and build in a separate directory. [llama.cpp Vulkan build instructions](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md#vulkan)
+
+```bash
+cmake -S . -B build-vulkan -DGGML_VULKAN=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build build-vulkan --config Release --target llama-server -j 4
+build-vulkan/bin/llama-server --list-devices
+```
+
+Reuse the llama.cpp server command below with the Vulkan binary, `--device` set to the discrete Radeon device name shown by `--list-devices`, and `-c 8192` for the initial smoke test. Start with `--spec-type none` and omit `--spec-draft-n-max`, then test embedded MTP separately for both correctness and throughput.
+
+The AMD-focused **Strata-rdna3** fork targets RDNA 3 `gfx1100` and its published benchmark is Flash-Next. The **strata-gfx906** builds target Vega hardware such as MI50, MI60, and Radeon VII. These target different GPU architectures from the RX 6600M. [Strata-rdna3](https://github.com/nicejunjie/Strata-rdna3) · [Strata gfx906 build notes](https://github.com/webzone/strata-gfx906/blob/gfx906/docs/GFX906.md)
+
+### Engine shortlist
 
 | Engine | When to test it |
 |---|---|
