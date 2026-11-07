@@ -1,0 +1,27 @@
+providers:
+  polystrata:
+    baseUrl: http://127.0.0.1:8092/v1
+    api: openai-completions
+    apiKey: POLYSTRATA_API_KEY
+    authHeader: true
+    models:
+      - id: tiel-coder
+        name: Tiel Coder - PolyStrata 128K
+        reasoning: true
+        input: [text]
+        contextWindow: 131072
+        maxTokens: 32768
+        cost:
+          input: 0
+          output: 0
+          cacheRead: 0
+          cacheWrite: 0
+        compat:
+          supportsStore: false
+          supportsDeveloperRole: false
+          maxTokensField: max_tokens
+          thinkingFormat: qwen-chat-template
+          qwenTemplateReasoningEffort: true
+          reasoningContentField: reasoning_content
+          requiresReasoningContentForToolCalls: true
+          streamIdleTimeoutMs: 180000
