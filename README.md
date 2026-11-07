@@ -121,7 +121,7 @@ The bridge writes a local snapshot every five seconds. PolyStrata reads it from 
 
 ## Versions
 
-This starter fetches the tested upstream PolyStrata code and engine at fixed versions, then applies a small web and telemetry overlay. To evaluate a newer release and tune it for your machine, give a coding agent the [upgrade and tuning prompt](UPGRADE-AGENT-PROMPT.md).
+This starter fetches the tested upstream PolyStrata code and engine at fixed versions, then applies a small web and telemetry overlay. When a newer release is available, follow the [upgrade and rollback runbook](UPGRADING.md). For an agent-led upgrade and performance tuning, use the [upgrade and tuning prompt](UPGRADE-AGENT-PROMPT.md).
 
 PolyStrata engine `v0.1.45-poly.7` with server commit `fabae0d6445e524a1dc68b2c2fa99b53880f98e6`, CUDA runtime and libraries from llama.cpp `b12128`, and Tiel GGUF revision `bb5f3f441849fc24c2d9037c310bc995404bfa0c`. Downloads come from the upstream projects. The repository contains the launcher and templates. Runtime files, logs and API keys live in the ignored `.tiel` directory.
 
