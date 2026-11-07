@@ -51,7 +51,7 @@ The Serve mapping persists when you stop Tiel so the URL works again when you re
 
 ## Direct LAN HTTP
 
-Use the host's private IPv4 address from `ipconfig`:
+Use the host's private IPv4 address from `ipconfig` in place of the example address:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Run-Tiel.ps1 -Access LAN -LanAddress 192.168.50.20

@@ -8,6 +8,8 @@ Rebuild or update my **Tiel Coder 35B-A3B MTP** setup on the best supported curr
 
 Use the public starter at `https://github.com/baskervile/tiel-polystrata.git`. If it is already checked out, use that copy. Otherwise, run `git clone https://github.com/baskervile/tiel-polystrata.git`. Read `README.md`, `Run-Tiel.ps1`, `launcher.py`, `monitor/`, and the tests before changing anything. Keep candidate changes on a separate branch or in an isolated checkout. Share the verified commit and results, and publish them only if I ask. If publishing requires GitHub sign-in, use an authorized connector or browser login flow. Keep tokens out of chat and the repo.
 
+Before publishing, check the files and commit history for credentials, real tailnet names and addresses, machine-specific paths, and private logs. Use the repository owner's authorized Git identity for commits. Omit automated co-author trailers and promotional branding.
+
 ## Ask me before choosing a performance profile
 
 1. **Context:** What total capacity and typical actual prompt lengths do I need? Offer 32K, 128K, and 256K if supported. Ask separately whether I need a filled-context test. My previous target was 50+ generation tok/s and 700–2,000 prompt tok/s at actual 8K–32K first, then a roughly 120K input test for a 128K profile. A 256K capacity claim needs its own verification.
