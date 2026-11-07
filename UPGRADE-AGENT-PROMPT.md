@@ -1,10 +1,12 @@
 # Prompt for rebuilding and tuning Tiel Coder on PolyStrata
 
-Copy everything below the divider into your coding agent. If available, give it this starter repo and the earlier benchmark records. The prompt includes the baseline numbers for use without those files.
+Copy everything below the divider into your coding agent. It can clone the [public starter repository](https://github.com/baskervile/tiel-polystrata) or work inside an existing clone. The prompt includes the baseline numbers for use without the original benchmark files.
 
 ---
 
 Rebuild or update my **Tiel Coder 35B-A3B MTP** setup on the best supported current PolyStrata runtime for my machine. I use it for coding and tool use in Oh My Pi (OMP), sometimes from another device. I want a repeatable clone-and-run installer, measured tuning, and a working OpenAI-compatible API. Carry out the work if you have shell access. Mark untested steps explicitly if you cannot run them.
+
+Use the public starter at `https://github.com/baskervile/tiel-polystrata.git`. If it is already checked out, use that copy. Otherwise, run `git clone https://github.com/baskervile/tiel-polystrata.git`. Read `README.md`, `Run-Tiel.ps1`, `launcher.py`, `monitor/`, and the tests before changing anything. Keep candidate changes on a separate branch or in an isolated checkout. Share the verified commit and results, and publish them only if I ask. If publishing requires GitHub sign-in, use an authorized connector or browser login flow. Keep tokens out of chat and the repo.
 
 ## Ask me before choosing a performance profile
 

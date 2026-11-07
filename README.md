@@ -6,9 +6,11 @@ A Windows x64 launcher for **Tiel Coder 35B-A3B MTP UD-Q4_K_XL** on NVIDIA CUDA.
 
 Install [Git for Windows](https://git-scm.com/download/win) and a [current NVIDIA driver](https://www.nvidia.com/en-us/drivers/). The tested system used an RTX 5060 with 8 GB VRAM and 32 GB system RAM. Allow about 27 GB of free disk space for a new installation, including the 22.75 GB model. The model cache and repo can be on different drives.
 
-After cloning this repository, open PowerShell in the clone and run:
+Clone the public starter and run it in PowerShell:
 
 ```powershell
+git clone https://github.com/baskervile/tiel-polystrata.git
+cd tiel-polystrata
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Run-Tiel.ps1
 ```
 
